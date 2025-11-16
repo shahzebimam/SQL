@@ -1,4 +1,6 @@
-Calculate total sales for each day and return the day with the 3rd highest sales value.
+Q - Calculate total sales for each day and return the day with the 3rd highest sales value.
+
+---Schema
 
 CREATE TABLE sales_data (
     order_date DATE,
@@ -7,6 +9,8 @@ CREATE TABLE sales_data (
     product_id INT,
     sale INT,
     order_value INT);
+
+---Sample Data
 
 INSERT INTO sales_data (order_date, customer_id, store_id, product_id, sale, order_value)
 VALUES
@@ -26,6 +30,8 @@ VALUES
 ('2024-12-04', 107, 3, 4, 1, 200),
 ('2024-12-04', 108, 3, 4, 2, 500);
 
+---Query
+
 select * from sales_data;
 
 select order_date, SUM(ORDER_VALUE) Daily_Sales
@@ -33,4 +39,14 @@ from sales_data
 group by order_date
 order by Daily_Sales desc
 offset 2 rows fetch next 1 rows only;
+
+---Explanation
+
+Each day’s total sales are computed using SUM(order_value).
+
+Results are sorted in descending order to rank daily performance.
+
+OFFSET 2 skips the top 2 highest sales days.
+
+FETCH NEXT 1 ROWS ONLY returns the 3rd highest sales day.
 
