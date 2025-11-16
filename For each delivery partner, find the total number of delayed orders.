@@ -1,5 +1,7 @@
-For each delivery partner, find the total number of delayed orders.
+Q - For each delivery partner, find the total number of delayed orders.
 (Delayed = Actual delivery time > Predicted delivery time)
+
+---Schema 
 
 CREATE TABLE swiggy_orders (
     orderid INT PRIMARY KEY,
@@ -9,6 +11,9 @@ CREATE TABLE swiggy_orders (
     order_time DATETIME,
     deliver_time DATETIME,
     predicted_time INT -- Predicted delivery time in minutes);
+
+---Sample Data
+
 INSERT INTO swiggy_orders (orderid, custid, city, del_partner, order_time, deliver_time, predicted_time)
 VALUES
 -- Delivery Partner A
@@ -29,6 +34,7 @@ VALUES
 (11, 111, 'Delhi', 'Partner C', '2024-12-18 09:00:00', '2024-12-18 09:35:00', 30),
 (12, 112, 'Hyderabad', 'Partner C', '2024-12-18 16:00:00', '2024-12-18 16:45:00', 30);
 
+---Query
 
 select * from swiggy_orders;
 
@@ -37,6 +43,14 @@ select * from swiggy_orders;
 select del_partner,sum( case when DATEDIFF(minute, order_time,deliver_time) > predicted_time then 1 else 0 end) as Delayed_Orders  from swiggy_orders
 group by del_partner;
 
+✔ Explanation
+
+DATEDIFF(minute, order_time, deliver_time) → Actual delivery time
+
+Check actual > predicted → delayed
+
+SUM(CASE…) → counts total delays per partner
+
 ---Second Method
 
 select a.del_partner,  isnull(Delayed_Orders,0) as Delayed_Orders  from
@@ -44,3 +58,11 @@ select a.del_partner,  isnull(Delayed_Orders,0) as Delayed_Orders  from
 (select del_partner, COUNT(*) as Delayed_Orders  from swiggy_orders
 where DATEDIFF(minute, order_time,deliver_time) > predicted_time
 group by del_partner) b on a.del_partner=b.del_partner ;
+
+✔ Explanation
+
+Pehle sare partners ka distinct list banaya
+
+Fir delayed orders ke table se join kiya
+
+Agar kisi partner ki delay = 0 ho, tab bhi LEFT JOIN se record miss nahi hoga
