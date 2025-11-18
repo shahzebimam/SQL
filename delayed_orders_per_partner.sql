@@ -61,8 +61,8 @@ group by del_partner) b on a.del_partner=b.del_partner ;
 
 ✔ Explanation
 
-Pehle sare partners ka distinct list banaya
+First, we created a distinct list of all partners.
 
-Fir delayed orders ke table se join kiya
+Then we joined it with the delayed orders table.
 
-Agar kisi partner ki delay = 0 ho, tab bhi LEFT JOIN se record miss nahi hoga
+If any partner has delay = 0, even then the record will not be missed because we used a LEFT JOIN.
